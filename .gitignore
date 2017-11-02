@@ -175,3 +175,5 @@ dkms.conf
 /library/src/main/ffmpeg/build/
 /library/src/main/ffmpeg/ffmpeg-3.3.5.tar.bz2
 /library/src/main/jni/ffmpeg/
+/library/src/main/obj/
+将删除 library/src/main/obj/local/armeabi-v7a/objs/

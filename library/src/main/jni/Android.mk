@@ -3,7 +3,6 @@ LOCAL_PATH := $(call my-dir)
 FFMPEG_LIB := $(LOCAL_PATH)/ffmpeg/armeabi-v7a/lib
 FFMPEG_INCLUDE := $(LOCAL_PATH)/ffmpeg/armeabi-v7a/include
 
-
 include $(CLEAR_VARS)
 LOCAL_MODULE := avcodec
 LOCAL_SRC_FILES := $(FFMPEG_LIB)/libavcodec.so
@@ -44,5 +43,6 @@ LOCAL_MODULE    := aha-jni
 LOCAL_SRC_FILES := pers_nelon_library_AhaJni.cpp
 LOCAL_C_INCLUDES += $(FFMPEG_INCLUDE)
 LOCAL_LDLIBS := -llog -lz
+LOCAL_CXXFLAGS += -D__STDC_CONSTANT_MACROS
 LOCAL_SHARED_LIBRARIES := avcodec avdevice avfilter avformat avutil swresample swscale
 include $(BUILD_SHARED_LIBRARY)
