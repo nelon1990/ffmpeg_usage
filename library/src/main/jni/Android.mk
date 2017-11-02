@@ -43,6 +43,5 @@ LOCAL_MODULE    := aha-jni
 LOCAL_SRC_FILES := pers_nelon_library_AhaJni.cpp
 LOCAL_C_INCLUDES += $(FFMPEG_INCLUDE)
 LOCAL_LDLIBS := -llog -lz
-LOCAL_CXXFLAGS += -D__STDC_CONSTANT_MACROS
 LOCAL_SHARED_LIBRARIES := avcodec avdevice avfilter avformat avutil swresample swscale
 include $(BUILD_SHARED_LIBRARY)
