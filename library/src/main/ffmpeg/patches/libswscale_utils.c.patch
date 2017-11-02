@@ -1,0 +1,169 @@
+--- patch/utils.c	2016-10-26 14:23:34.470464862 +0800
++++ unpatch/utils.c	2016-03-29 10:27:11.000000000 +0800
+@@ -55,9 +55,6 @@
+ #include "rgb2rgb.h"
+ #include "swscale.h"
+ #include "swscale_internal.h"
+-#include "android/log.h"
+-
+-#define LOGD(...) __android_log_print(ANDROID_LOG_DEBUG,"FilemanagerVideoPlayer_jni",__VA_ARGS__)
+ 
+ static void handle_formats(SwsContext *c);
+ 
+@@ -834,7 +831,6 @@ int sws_setColorspaceDetails(struct SwsC
+                              int srcRange, const int table[4], int dstRange,
+                              int brightness, int contrast, int saturation)
+ {
+-
+     const AVPixFmtDescriptor *desc_dst;
+     const AVPixFmtDescriptor *desc_src;
+     int need_reinit = 0;
+@@ -843,26 +839,10 @@ int sws_setColorspaceDetails(struct SwsC
+     desc_dst = av_pix_fmt_desc_get(c->dstFormat);
+     desc_src = av_pix_fmt_desc_get(c->srcFormat);
+ 
+-    LOGD("STEP_1");
+-
+-    if(!isYUV(c->dstFormat) && !isGray(c->dstFormat)){
+-    	LOGD("STEP_1-1");
++    if(!isYUV(c->dstFormat) && !isGray(c->dstFormat))
+         dstRange = 0;
+-    }
+-
+-    LOGD("c->srcFormat: %d",c->srcFormat);
+-    if(c->srcFormat < 0){
+-	return -1;
+-    }
+-
+-    if(!isYUV(c->srcFormat) && !isGray(c->srcFormat)){
+-    	LOGD("STEP_1-2");
++    if(!isYUV(c->srcFormat) && !isGray(c->srcFormat))
+         srcRange = 0;
+-    }
+-
+-    LOGD("STEP_1-2-1");
+-
+-  
+ 
+     if (c->srcRange != srcRange ||
+         c->dstRange != dstRange ||
+@@ -871,16 +851,13 @@ int sws_setColorspaceDetails(struct SwsC
+         c->saturation != saturation ||
+         memcmp(c->srcColorspaceTable, inv_table, sizeof(int) * 4) ||
+         memcmp(c->dstColorspaceTable,     table, sizeof(int) * 4)
+-    ) {
+-	LOGD("STEP_1-4");
+-	need_reinit = 1;
+-    }
+-    LOGD("STEP_2");
++    )
++        need_reinit = 1;
+ 
+     memmove(c->srcColorspaceTable, inv_table, sizeof(int) * 4);
+     memmove(c->dstColorspaceTable, table, sizeof(int) * 4);
+ 
+-    LOGD("STEP_3");
++
+ 
+     c->brightness = brightness;
+     c->contrast   = contrast;
+@@ -896,21 +873,13 @@ int sws_setColorspaceDetails(struct SwsC
+     c->dstFormatBpp = av_get_bits_per_pixel(desc_dst);
+     c->srcFormatBpp = av_get_bits_per_pixel(desc_src);
+ 
+-    LOGD("STEP_4");
+-
+-    if (c->cascaded_context[c->cascaded_mainindex]){
++    if (c->cascaded_context[c->cascaded_mainindex])
+         return sws_setColorspaceDetails(c->cascaded_context[c->cascaded_mainindex],inv_table, srcRange,table, dstRange, brightness,  contrast, saturation);
+-    }
+-
+-    LOGD("STEP_5");
+ 
+     if (!need_reinit)
+         return 0;
+ 
+-    LOGD("STEP_6");
+-
+     if ((isYUV(c->dstFormat) || isGray(c->dstFormat)) && (isYUV(c->srcFormat) || isGray(c->srcFormat))) {
+-        LOGD("STEP_7");
+         if (!c->cascaded_context[0] &&
+             memcmp(c->dstColorspaceTable, c->srcColorspaceTable, sizeof(int) * 4) &&
+             c->srcW && c->srcH && c->dstW && c->dstH) {
+@@ -921,9 +890,7 @@ int sws_setColorspaceDetails(struct SwsC
+             int dstW = c->dstW;
+             int dstH = c->dstH;
+             int ret;
+-            //av_log(c, AV_LOG_VERBOSE, "YUV color matrix differs for YUV->YUV, using intermediate RGB to convert\n");
+-
+-            LOGD("STEP_8");
++            av_log(c, AV_LOG_VERBOSE, "YUV color matrix differs for YUV->YUV, using intermediate RGB to convert\n");
+ 
+             if (isNBPS(c->dstFormat) || is16BPS(c->dstFormat)) {
+                 if (isALPHA(c->srcFormat) && isALPHA(c->dstFormat)) {
+@@ -946,9 +913,7 @@ int sws_setColorspaceDetails(struct SwsC
+                 tmp_width  = srcW;
+                 tmp_height = srcH;
+             }
+-            
+ 
+-            LOGD("STEP_9");
+             ret = av_image_alloc(c->cascaded_tmp, c->cascaded_tmpStride,
+                                 tmp_width, tmp_height, tmp_format, 64);
+             if (ret < 0)
+@@ -959,15 +924,12 @@ int sws_setColorspaceDetails(struct SwsC
+                                                         c->flags, c->param);
+             if (!c->cascaded_context[0])
+                 return -1;
+-             
+-            LOGD("STEP_10");
++
+             c->cascaded_context[0]->alphablend = c->alphablend;
+             ret = sws_init_context(c->cascaded_context[0], NULL , NULL);
+             if (ret < 0)
+                 return ret;
+             //we set both src and dst depending on that the RGB side will be ignored
+-
+-            LOGD("STEP_11");
+             sws_setColorspaceDetails(c->cascaded_context[0], inv_table,
+                                      srcRange, table, dstRange,
+                                      brightness, contrast, saturation);
+@@ -975,36 +937,28 @@ int sws_setColorspaceDetails(struct SwsC
+             c->cascaded_context[1] = sws_getContext(tmp_width, tmp_height, tmp_format,
+                                                     dstW, dstH, c->dstFormat,
+                                                     c->flags, NULL, NULL, c->param);
+-
+-            LOGD("STEP_12");
+             if (!c->cascaded_context[1])
+                 return -1;
+             sws_setColorspaceDetails(c->cascaded_context[1], inv_table,
+                                      srcRange, table, dstRange,
+                                      0, 1 << 16, 1 << 16);
+-
+-            LOGD("STEP_13");
+             return 0;
+         }
+-        LOGD("STEP_14");
+         return -1;
+     }
+ 
+-    LOGD("STEP_15");
+     if (!isYUV(c->dstFormat) && !isGray(c->dstFormat)) {
+         ff_yuv2rgb_c_init_tables(c, inv_table, srcRange, brightness,
+                                  contrast, saturation);
+         // FIXME factorize
+-        LOGD("STEP_16");
++
+         if (ARCH_PPC)
+             ff_yuv2rgb_init_tables_ppc(c, inv_table, brightness,
+                                        contrast, saturation);
+-        LOGD("STEP_17");
+     }
+ 
+-
+     fill_rgb2yuv_table(c, table, dstRange);
+-    LOGD("STEP_18");
++
+     return 0;
+ }
+ 

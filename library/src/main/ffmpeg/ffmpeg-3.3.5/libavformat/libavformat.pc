@@ -1,0 +1,14 @@
+prefix=/home/nelon/mine/project/ffmpeg_usage/library/src/main/ffmpeg/build/armv7-a
+exec_prefix=${prefix}
+libdir=/home/nelon/mine/project/ffmpeg_usage/library/src/main/ffmpeg/build/armv7-a/lib
+includedir=/home/nelon/mine/project/ffmpeg_usage/library/src/main/ffmpeg/build/armv7-a/include
+
+Name: libavformat
+Description: FFmpeg container format library
+Version: 57.71.100
+Requires: 
+Requires.private: libavcodec >= 57.89.100, libswresample >= 2.7.100, libavutil >= 55.58.100
+Conflicts:
+Libs: -L${libdir}  -lavformat 
+Libs.private: -lm -lz -pthread -lgcc
+Cflags: -I${includedir}
