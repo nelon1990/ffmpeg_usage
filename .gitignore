@@ -83,6 +83,7 @@ freeline_project_description.json
 *.lo
 *.o
 *.obj
+*.obj/*
 
 # Precompiled Headers
 *.gch
