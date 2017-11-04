@@ -229,6 +229,7 @@ if [ ${TARGET} == 'x86_64' ]; then
     OPTIMIZE_CFLAGS="-fomit-frame-pointer"
     JNI_DIR=`pwd`/../jni/ffmpeg/x86_64
     ADDITIONAL_CONFIGURE_FLAG=
+    build_one
 fi
 
 if [ ${TARGET} == 'i686' ]; then

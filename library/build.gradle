@@ -12,6 +12,12 @@ android {
         versionName "1.0"
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+
+        externalNativeBuild {
+            ndkBuild {
+                abiFilters "armeabi-v7a", "armeabi"
+            }
+        }
     }
 
     buildTypes {
@@ -21,12 +27,12 @@ android {
         }
     }
 
-
     externalNativeBuild {
         ndkBuild {
             path "src/main/jni/Android.mk"
         }
     }
+
 }
 
 dependencies {

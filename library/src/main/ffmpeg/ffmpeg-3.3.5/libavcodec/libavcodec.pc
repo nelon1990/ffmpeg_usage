@@ -1,7 +1,7 @@
-prefix=/home/nelon/mine/project/ffmpeg_usage/library/src/main/ffmpeg/build/armv7-a
+prefix=/home/nelon/workspace/project/ffmpeg_usage/library/src/main/ffmpeg/build/x86_64
 exec_prefix=${prefix}
-libdir=/home/nelon/mine/project/ffmpeg_usage/library/src/main/ffmpeg/build/armv7-a/lib
-includedir=/home/nelon/mine/project/ffmpeg_usage/library/src/main/ffmpeg/build/armv7-a/include
+libdir=/home/nelon/workspace/project/ffmpeg_usage/library/src/main/ffmpeg/build/x86_64/lib
+includedir=/home/nelon/workspace/project/ffmpeg_usage/library/src/main/ffmpeg/build/x86_64/include
 
 Name: libavcodec
 Description: FFmpeg codec library
@@ -10,5 +10,5 @@ Requires:
 Requires.private: libswresample >= 2.7.100, libavutil >= 55.58.100
 Conflicts:
 Libs: -L${libdir}  -lavcodec 
-Libs.private: -lm -lz -pthread -lgcc
+Libs.private: -lm -lz -lgcc
 Cflags: -I${includedir}
